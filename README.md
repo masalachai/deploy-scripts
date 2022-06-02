@@ -1,7 +1,5 @@
 # deploy-scripts
 
-[![Build](https://ci.finology.com.my/api/badges/loanstreet/deploy-scripts/status.svg?ref=refs/heads/0.6.0)](https://ci.finology.com.my/loanstreet/deploy-scripts)
-
 1. [Demo](#demo)
 2. [Overview](#overview)
 3. [Installation](#installation)
@@ -72,7 +70,7 @@ deploy-scripts can be installed in any one of the following 2 ways
 Just make a git checkout of the stable branch to your home directory with the following command.
 
 ```bash
-git clone --single-branch --branch 0.6.0 https://github.com/loanstreet/deploy-scripts.git $HOME/.deploy-scripts/0.6.0
+git clone --single-branch --branch 0.6.0 https://github.com/masalachai/deploy-scripts.git $HOME/.deploy-scripts/0.6.0
 ```
 
 ### Bootstrap script for docker image
@@ -82,11 +80,11 @@ You can save the script to one of the directories in your PATH environment varia
 
 ```bash
 # To just download as a shell script
-curl https://raw.githubusercontent.com/loanstreet/deploy-scripts/0.6.0/deploy-scripts.sh -o $HOME/deploy.sh
+curl https://raw.githubusercontent.com/masalachai/deploy-scripts/0.6.0/deploy-scripts.sh -o $HOME/deploy.sh
 
 # To download the script and update your PATH variable for easy execution
 mkdir -p $HOME/.deploy-scripts \
-	&& curl https://raw.githubusercontent.com/loanstreet/deploy-scripts/0.6.0/deploy-scripts.sh -o $HOME/.deploy-scripts/deploy \
+	&& curl https://raw.githubusercontent.com/masalachai/deploy-scripts/0.6.0/deploy-scripts.sh -o $HOME/.deploy-scripts/deploy \
 	&& chmod +x $HOME/.deploy-scripts/deploy \
 	&& echo 'PATH="$HOME/.deploy-scripts:$PATH"' >> ~/.profile \
 	&& . ~/.profile
@@ -184,7 +182,7 @@ deploy /my/project development
 
 ## Sample Deployment
 
-For a step-by-step understanding of how a deployment happens, and how to add deployment support to a project, please check the [Sample Django Deployment](https://github.com/loanstreet/deploy-scripts/wiki/Sample-Django-Deployment) wiki page.
+For a step-by-step understanding of how a deployment happens, and how to add deployment support to a project, please check the [Sample Django Deployment](https://github.com/masalachai/deploy-scripts/wiki/Sample-Django-Deployment) wiki page.
 
 ## Deployment Steps
 
