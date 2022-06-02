@@ -24,8 +24,8 @@ copy_deployment_files() {
 	cd $COPY_PROJECT_DIR/$1-project
 	git init
 	git add .
-	git config user.email "techgroup@loanstreet.com.my"
-	git config user.name "Loanstreet Tech"
+	git config user.email "deploy-scripts@masalachai.net"
+	git config user.name "Deploy Scripts"
 	git commit . -m "test commit"
 	cd $SCRIPT_PATH/../
 	IENV="default"

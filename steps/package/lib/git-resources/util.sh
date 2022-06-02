@@ -4,8 +4,8 @@ ds_package_as_git_repo() {
 	fi
 
 	git init 2>&1 | indent
-	git config user.name "deployer"
-	git config user.email "techgroup@loanstreet.com.my"
+	git config user.name "Deploy Scripts"
+	git config user.email "deploy-scripts@masalachai.net"
 	git add . 2>&1 | indent
 	git commit . -m "push for deployment" 2>&1 | indent
 
