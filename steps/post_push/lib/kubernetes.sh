@@ -183,7 +183,6 @@ ds_post_push() {
 			sed -i "s/name:.*$/name: $KUBE_SERVICE/g" "$KUBE_SVC_FILE"
 			sed -i "s/app:.*$/app: $KUBE_SERVICE/g" "$KUBE_SVC_FILE"
 			debug "s/image:.*$/image: $DOCKER_IMAGE_SED/g"
-			sed -i "s/image:.*$/image: $DOCKER_IMAGE_SED/g" "$KUBE_SVC_FILE"
 
 			if [ "$KUBERNETES_REPLICAS" != "" ]; then
 				sed -i "s/replicas:.*$/replicas: $KUBERNETES_REPLICAS/g" "$KUBE_SVC_FILE"
@@ -199,6 +198,9 @@ ds_post_push() {
 
 			KUBE_SERVICE_CFG="$KUBE_SVC_FILE"
 		fi
+
+		# Set image name to new prepared image
+		sed -i "s/image:.*$/image: $DOCKER_IMAGE_SED/g" "$KUBE_SERVICE_CFG"
 
 		kubectl create -f "$KUBE_SERVICE_CFG" --namespace=$KUBERNETES_NAMESPACE
 	else
