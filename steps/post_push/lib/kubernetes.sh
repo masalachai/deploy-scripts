@@ -192,8 +192,6 @@ ds_post_push() {
 				printf "      imagePullSecrets:\n        - name: $KUBERNETES_CRED" >> "$KUBE_SVC_FILE"
 			fi
 
-			ds_debug_cat "$KUBE_SVC_FILE"
-
 			# yamllint "$KUBE_SVC_FILE"
 
 			KUBE_SERVICE_CFG="$KUBE_SVC_FILE"
@@ -201,6 +199,7 @@ ds_post_push() {
 
 		# Set image name to new prepared image
 		sed -i "s/image:.*$/image: $DOCKER_IMAGE_SED/g" "$KUBE_SERVICE_CFG"
+		ds_debug_cat "$KUBE_SERVICE_CFG"
 
 		kubectl create -f "$KUBE_SERVICE_CFG" --namespace=$KUBERNETES_NAMESPACE
 	else
