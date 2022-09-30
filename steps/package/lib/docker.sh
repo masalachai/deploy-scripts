@@ -11,7 +11,7 @@ ds_package() {
 	ENV_FILE_PRESENT="true"
 	COMPOSE_ENV_FILE=$(awk '/env_file:/,/\n/' docker-compose.yml | awk '{printf $2}')
 
-	if [ ! -f "$COMPOSE_ENV_FILE" ]; then
+	if [ "$COMPOSE_ENV_FILE" != "" ] && [ ! -f "$COMPOSE_ENV_FILE" ]; then
 		ENV_FILE_PRESENT="false"
 		touch "$COMPOSE_ENV_FILE"
 	fi
