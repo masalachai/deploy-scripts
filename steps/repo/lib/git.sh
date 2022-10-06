@@ -16,5 +16,6 @@ ds_repo_fetch() {
 		git fetch --tags
 		TAG_BRANCH="$GIT_TAG-$(git symbolic-ref --short HEAD)"
 		git checkout tags/$GIT_TAG -b $TAG_BRANCH
+		cd "$PWD_DIR"
 	fi
 }
