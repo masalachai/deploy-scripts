@@ -23,9 +23,5 @@ if [ "$1" = "" ]; then
 	error "No deployment enviroment supplied"
 fi
 
-if [ "$2" != "" ]; then
-	export PROJECT_VERSION="$2"
-fi
-
 cd $PROJECT_DEPLOY_DIR
 PROJECT_DEPLOY_DIR=$PROJECT_DEPLOY_DIR sh $SCRIPT_PATH/scripts/deploy.sh $1
