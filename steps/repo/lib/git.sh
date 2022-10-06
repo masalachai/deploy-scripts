@@ -9,4 +9,13 @@ ds_repo_fetch() {
 		warning "No GIT_BRANCH specified, building from version in the current project directory"
 		copy_local_project_for_build "$PROJECT_DIR" "$2" "$WORK_DIR"
 	fi
+
+	if [ "$GIT_TAG" != "" ]; then
+		PWD_DIR=$(pwd)
+		cd "$2"
+		git fetch --tags
+		TAG_BRANCH="$GIT_TAG-$(git symbolic-ref --short HEAD)"
+		git checkout tags/$GIT_TAG -b $TAG_BRANCH
+		cd "$PWD_DIR"
+	fi
 }
