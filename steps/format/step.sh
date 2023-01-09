@@ -17,6 +17,11 @@ ds_exec_step() {
 	# Include deployment directory in the deployment config
 	printf "DEPLOYMENT_DIR=$DEPLOYMENT_DIR\n" >> "$DEPLOY_CONFIG_SH"
 
+	# Include env file path if exists
+	if [ "$ENV_FILE" != "" ]; then
+		printf "ENV_FILE=$ENV_FILE\n" >> "$DEPLOY_CONFIG_SH"
+	fi
+
 	INCLUDE_RUN_SH=$(echo $RESTART_COMMAND | grep 'run.sh' | wc -l)
 
 	# If restart command used run.sh script, include it in the deployment
