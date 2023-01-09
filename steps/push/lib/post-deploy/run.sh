@@ -27,6 +27,10 @@ if [ "$PID_PATH" = "" ]; then
 	START_COMMAND="$START_COMMAND & $PID_COMMAND"
 fi
 
+if [ "$ENV_FILE" != "" ] && [ -f "$ENV_FILE" ]; then
+	START_COMMAND="if [ -f \"$ENV_FILE\" ]; then echo \"Setting vars from $ENV_FILE \"; sh \"$ENV_FILE\"; fi; $START_COMMAND"
+fi
+
 case $1 in
 	start)
 		echo "Starting $SERVICE_NAME ($PROJECT_ENVIRONMENT) ..."
