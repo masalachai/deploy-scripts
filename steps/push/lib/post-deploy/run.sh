@@ -28,7 +28,7 @@ if [ "$PID_PATH" = "" ]; then
 fi
 
 if [ "$ENV_FILE" != "" ] && [ -f "$ENV_FILE" ]; then
-	START_COMMAND="if [ -f \"$ENV_FILE\" ]; then echo \"Setting vars from $ENV_FILE \"; sh \"$ENV_FILE\"; fi; $START_COMMAND"
+	START_COMMAND="if [ -f \"$ENV_FILE\" ]; then echo \"Setting vars from $ENV_FILE \"; . \"$ENV_FILE\"; fi; $START_COMMAND"
 fi
 
 case $1 in
