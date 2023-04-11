@@ -1,7 +1,7 @@
 FROM python:3.8-alpine
 
 ARG APP_ENV
-ENV APP_ENV ${APP_ENV}
+ENV APP_ENV ${PROJECT_ENVIRONMENT}
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
@@ -18,7 +18,7 @@ RUN apk update && apk add --no-cache libpq libstdc++ \
 	&& pip install --no-cache-dir -r requirements.txt \
 	&& apk del --no-cache .build-deps
 
-ADD . $APP_HOME
+ADD . ${APP_HOME}
 
 RUN rm -rf Dockerfile docker-compose.yml && echo $'cd /app\npython manage.py migrate\npython manage.py runserver 0.0.0.0:80' > start.sh
 

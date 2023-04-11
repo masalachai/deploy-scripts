@@ -216,6 +216,75 @@ ds_copy_local_files() {
 	fi
 }
 
+copy_target_docker_compose() {
+	PROJECT_DIR_DEPLOY_FILES="$1"
+	PROJECT_ENVIRONMENT="$2"
+	DESTINATION_DIR="$3"
+
+	debug "$PROJECT_DIR_DEPLOY_FILES/$PROJECT_ENVIRONMENT"
+	if [ ! -d "$PROJECT_DIR_DEPLOY_FILES/environments/$PROJECT_ENVIRONMENT" ]; then
+		error "Environment directory for $PROJECT_ENVIRONMENT not found"
+		structure_error_stop
+	fi
+
+	if [ ! -d "$DESTINATION_DIR" ]; then
+		error "Destination dir $DESTINATION_DIR not found"
+		structure_error_stop
+	fi
+
+	PROJECT_DOCKERFILE_PATH="$PROJECT_DIR_DEPLOY_FILES/docker/$DOCKER_COMPOSE"
+	DOCKERFILE_PATH="$PROJECT_DIR_DEPLOY_FILES/environments/$PROJECT_ENVIRONMENT/docker/$DOCKER_COMPOSE"
+
+	if [ -f "$DOCKERFILE_PATH" ]; then
+		info "Copying target docker-compose $DOCKERFILE_PATH to $DESTINATION_DIR"
+		cp $DOCKERFILE_PATH $DESTINATION_DIR
+	elif [ -f "$PROJECT_DOCKERFILE_PATH" ]; then
+		info "Copying generic target docker-compose $PROJECT_DOCKERFILE_PATH to $DESTINATION_DIR"
+		cp $PROJECT_DOCKERFILE_PATH $DESTINATION_DIR
+	else
+		error "No target docker-compose found"
+		structure_error_stop
+	fi
+}
+
+copy_dockerfile() {
+	PROJECT_DIR_DEPLOY_FILES="$1"
+	PROJECT_ENVIRONMENT="$2"
+	DESTINATION_DIR="$3"
+
+	debug "$PROJECT_DIR_DEPLOY_FILES/$PROJECT_ENVIRONMENT"
+	if [ ! -d "$PROJECT_DIR_DEPLOY_FILES/environments/$PROJECT_ENVIRONMENT" ]; then
+		error "Environment directory for $PROJECT_ENVIRONMENT not found"
+		structure_error_stop
+	fi
+
+	if [ ! -d "$DESTINATION_DIR" ]; then
+		error "Deploy repo dir $DESTINATION_DIR not found"
+		structure_error_stop
+	fi
+
+	PROJECT_DOCKERFILE_PATH="$PROJECT_DIR_DEPLOY_FILES/docker/Dockerfile"
+	DOCKERFILE_PATH="$PROJECT_DIR_DEPLOY_FILES/environments/$PROJECT_ENVIRONMENT/docker/Dockerfile"
+
+	if [ -f "$DOCKERFILE_PATH" ]; then
+		info "Copying Dockerfile $DOCKERFILE_PATH to $DESTINATION_DIR"
+		cp $DOCKERFILE_PATH $DESTINATION_DIR
+	elif [ -f "$PROJECT_DOCKERFILE_PATH" ]; then
+		info "Copying generic Dockerfile $PROJECT_DOCKERFILE_PATH to $DESTINATION_DIR"
+		cp $PROJECT_DOCKERFILE_PATH $DESTINATION_DIR
+	else
+		error "No Dockerfile found"
+		structure_error_stop
+	fi
+
+	if [ "$PACKAGE_DOCKERIGNORE" != "false" ]; then
+		DOCKERIGNORE_FILE="$DESTINATION_DIR/.dockerignore"
+		if [ ! -f "$DOCKERIGNORE_FILE" ]; then
+			printf "Dockerfile\ndocker-compose.*\n" >> $DOCKERIGNORE_FILE
+		fi
+	fi
+}
+
 copy_docker_files() {
 	PROJECT_DIR_DEPLOY_FILES="$1"
 	PROJECT_ENVIRONMENT="$2"

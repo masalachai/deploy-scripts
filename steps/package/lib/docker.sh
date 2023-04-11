@@ -3,40 +3,36 @@ ds_package() {
 		error "package: docker: Too few arguments given"
 	fi
 
-	cd "$1"
+	copy_dockerfile "$PROJECT_DEPLOY_DIR" $PROJECT_ENVIRONMENT "$1"
 
-	copy_docker_files "$PROJECT_DEPLOY_DIR" $PROJECT_ENVIRONMENT "$1"
-
-	TAG=$(grep 'image:' docker-compose.yml | wc -l)
-	ENV_FILE_PRESENT="true"
-	COMPOSE_ENV_FILE=$(awk '/env_file:/,/\n/' docker-compose.yml | awk '{printf $2}')
-
-	if [ "$COMPOSE_ENV_FILE" != "" ] && [ ! -f "$COMPOSE_ENV_FILE" ]; then
-		ENV_FILE_PRESENT="false"
-		touch "$COMPOSE_ENV_FILE"
-	fi
-
-	if [ $TAG -eq 0 ]; then
+	if [ "$DOCKER_IMAGE" = "" ]; then
 		TIMESTAMP=$(date +%Y%m%d%H%M%S)
-		SRV_NAME=$(echo $SERVICE_NAME | cut -d"." -f1)
-		TAG="$SRV_NAME-$PROJECT_ENVIRONMENT:$TIMESTAMP"
-		if [ "$RELEASE_VERSION" != "" ]; then
-			TAG=$SRV_NAME:$RELEASE_VERSION
-		fi
-		BUILDSTR=$(grep 'build:' docker-compose.yml)
-		if [ "$BUILDSTR" != "" ]; then
-			sed -i "s/build\:/image\: $TAG\n$BUILDSTR/g" docker-compose.yml
-		fi
-		ds_debug_cat "docker-compose.yml"
-	else
-		TAG=$(grep 'image:' docker-compose.yml | awk '{print $2}')
+		DOCKER_IMAGE="$(echo $SERVICE_NAME | cut -d"." -f1):$TIMESTAMP"
 	fi
 
-	docker-compose build $DOCKER_COMPOSE_OPTS
+	if [ ! -f "$DOCKER_COMPOSE_BUILD_FILE"  ]; then
+		DOCKER_COMPOSE_BUILD_NEW=$(cat <<-END
+version: '$DOCKER_COMPOSE_YAML_VERSION'
 
-	if [ "$ENV_FILE_PRESENT" = "false" ]; then
-		rm -rf "$COMPOSE_ENV_FILE"
+services:
+  default:
+    image: $DOCKER_IMAGE
+    build:
+      context: $1
+      dockerfile: Dockerfile
+      args:
+        PROJECT_ENVIRONMENT: $PROJECT_ENVIRONMENT
+END
+	)
+
+		DOCKER_COMPOSE_BUILD_FILE="$1/docker-compose.build.yml"
+		printf "$DOCKER_COMPOSE_BUILD_NEW" > $DOCKER_COMPOSE_BUILD_FILE
 	fi
 
-	cleanup_docker_files
+	export PROJECT_ENVIRONMENT="$PROJECT_ENVIRONMENT"
+	export APP_DIR="$1"
+	export DOCKER_COMPOSE_BUILD_PATH=$DOCKER_COMPOSE_BUILD_FILE
+	export DOCKER_IMAGE=$DOCKER_IMAGE
+
+	docker-compose -f "$DOCKER_COMPOSE_BUILD_FILE" $DOCKER_COMPOSE_OPTS build
 }

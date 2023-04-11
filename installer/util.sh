@@ -77,18 +77,14 @@ ds_install_docker() {
 	printf "FROM $FROM_IMAGE\n\nEXPOSE 80\n" > "$DOCKERFILE_PATH"
 	success "done"
 
-	DOCKER_COMPOSE=$(cat <<-END
+	DOCKER_COMPOSE_TARGET=$(cat <<-END
 version: '3'
 
 services:
   default:
     image: example-$INSTALL_ENV:latest
+	container_name: example-$INSTALL_ENV
     restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APP_ENV: $INSTALL_ENV
     ports:
       - 3000:80
 END
@@ -96,7 +92,7 @@ END
 
 	DOCKER_COMPOSE_PATH="$DOCKER_PROJECT/docker-compose.yml"
 	infof "Creating $DOCKER_COMPOSE_PATH ... "
-	printf "$DOCKER_COMPOSE" > "$DOCKER_COMPOSE_PATH"
+	printf "$DOCKER_COMPOSE_TARGET" > "$DOCKER_COMPOSE_PATH"
 	success "done"
 
 	infof "Adding docker vars to app-config.sh and $INSTALL_ENV/config.sh ... "
@@ -113,5 +109,20 @@ ds_install_kubernetes() {
 	infof "Adding kubernetes vars to $INSTALL_ENV/config.sh ... "
 	TLS_SECRET="$INSTALL_ENV-$(date '+%s')"
 	printf "# POST_PUSH=kubernetes\n# KUBERNETES_CLUSTER='dev'\n# KUBERNETES_INGRESS='ingress-dev'\n# KUBERNETES_TLS=false\n# KUBERNETES_CERT_MANAGER=letsencrypt-prod\n" >> "$1/$DS_DIR/environments/$INSTALL_ENV/config.sh"
+	success "done"
+}
+
+ds_install_helm() {
+	if [ "$1" = "" ]; then
+		error "installer: helm: Insufficient args given to ds_install_helm"
+	fi
+
+	infof "Adding kubernetes helm vars to $INSTALL_ENV/config.sh ... "
+	printf "# POST_PUSH=helm\n# KUBERNETES_CLUSTER='dev'\n" >> "$1/$DS_DIR/environments/$INSTALL_ENV/config.sh"
+	CWD=$(pwd)
+	mkdir -p "$1/$DS_DIR/environments/$INSTALL_ENV/kubernetes"
+	cd "$1/$DS_DIR/environments/$INSTALL_ENV/kubernetes"
+	helm create helm
+	cd "$CWD"
 	success "done"
 }

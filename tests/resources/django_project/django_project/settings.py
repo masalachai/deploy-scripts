@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'deploy-scripts.dev.finology.com.my',
     'localhost',
-    '127.0.0.1'
+    '127.0.0.1',
+    '*'
 ]
 
 

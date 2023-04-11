@@ -59,3 +59,8 @@ if [ "$4" = "--kubernetes" ]; then
 	title "installer: kubernetes"
 	ds_install_kubernetes $2
 fi
+
+if [ "$4" = "--helm" ]; then
+	title "installer: helm"
+	ds_install_helm $2
+fi

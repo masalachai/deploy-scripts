@@ -63,43 +63,20 @@ Support has also been added to containerize and deploy projects built on the abo
 
 # Installation
 
-deploy-scripts can be installed in any one of the following 2 ways
-
-### Git checkout
+deploy-scripts can be installed in the following way
 
 Just make a git checkout of the stable branch to your home directory with the following command.
 
 ```bash
-git clone --single-branch --branch 0.6.0 https://github.com/masalachai/deploy-scripts.git $HOME/.deploy-scripts/0.6.0
-```
-
-### Bootstrap script for docker image
-
-Or download a bootstrap script that will use a dockerized version of deploy-scripts to manage your deployments.
-You can save the script to one of the directories in your PATH environment variable for easy execution
-
-```bash
-# To just download as a shell script
-curl https://raw.githubusercontent.com/masalachai/deploy-scripts/0.6.0/deploy-scripts.sh -o $HOME/deploy.sh
-
-# To download the script and update your PATH variable for easy execution
-mkdir -p $HOME/.deploy-scripts \
-	&& curl https://raw.githubusercontent.com/masalachai/deploy-scripts/0.6.0/deploy-scripts.sh -o $HOME/.deploy-scripts/deploy \
-	&& chmod +x $HOME/.deploy-scripts/deploy \
-	&& echo 'PATH="$HOME/.deploy-scripts:$PATH"' >> ~/.profile \
-	&& . ~/.profile
+git clone --single-branch --branch 0.7.0 https://github.com/masalachai/deploy-scripts.git $HOME/.deploy-scripts/0.7.0
 ```
 
 # Adding deployment to a project
 
 Deployment support can be added to a project with the following commands
 
-### Git checkout installation
-
-If you have installed deploy-scripts with the [git checkout method](#git-checkout) mentioned above, you can install the required files to your project directory with the following commands.
-
 ```bash
-cd $HOME/.deploy-scripts/0.6.0/installer
+cd $HOME/.deploy-scripts/0.7.0/installer
 
 # The installer script usage is
 # sh install.sh [project type] [your project directory]
@@ -129,39 +106,6 @@ sh install.sh node /path/to/node/project
 sh install.sh html /path/to/project
 ```
 
-### Docker image installation
-
-If you have installed deploy-scripts as a [docker image](#bootstrap-script-for-docker-image) as mentioned above, you can install the required files to your project directory with the following commands.
-
-```bash
-# The installer command usage is
-# sh deploy-scripts.sh --install [project type] [your project directory]
-# For example:
-# For a Java Maven (mvnw) Project
-deploy --install java /path/to/java/project
-
-# or for a Rails project
-deploy --install rails /path/to/rails/project
-
-# or for a Django project
-deploy --install python /path/to/django/project
-
-# or for an actix-web project
-deploy --install rust /path/to/django/project
-
-# or for a reactjs project
-deploy --install reactjs /path/to/reactjs/project
-
-# or for a nextjs project
-deploy --install nextjs /path/to/nextjs/project
-
-# or for a node project
-deploy --install node /path/to/node/project
-
-# or for a simple PHP or static HTML site
-deploy --install html /path/to/project
-```
-
 Follow the instructions given by the installer, if any.
 
 Once the configuration files have been added, you can further configure your deployment by modifying the [configuration variables](#configuration-variables) in `app-config.sh` or the environment-specific `config.sh`.
@@ -169,15 +113,9 @@ Once the configuration files have been added, you can further configure your dep
 To start deploying according to your configured settings, go to your project root and run the following command:
 
 ```bash
-# For deploy-scripts installed via git checkout
 # Usage: sh deploy/deploy.sh [environment name]
 # For example for the environment called 'development'
 sh deploy/deploy.sh development
-
-# For deploy-scripts installed via docker
-# Usage: sh deploy-scripts.sh [your project directory] [environment name]
-# For example, for deploying the environment named 'development'
-deploy /my/project development
 ```
 
 ## Sample Deployment

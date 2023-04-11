@@ -2,13 +2,9 @@ version: '2'
 
 services:
   default:
-    image: django_project:latest
+    image: example-default:latest
+    container_name: example_default
     restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APP_ENV: default
     volumes:
       - ./../../shared:/shared
     ports:

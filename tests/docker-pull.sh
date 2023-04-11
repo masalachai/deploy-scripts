@@ -21,12 +21,13 @@ PROJECT_DEPLOY_DIR="$COPY_PROJECT_DIR/python-project/deploy"
 HOST="localhost:8000"
 cp -r $SCRIPT_PATH/../projects/python/template/docker $PROJECT_DEPLOY_DIR/
 cp -r $SCRIPT_PATH/../projects/python/template/environments/$PROJECT_ENVIRONMENT/docker $PROJECT_DEPLOY_DIR/environments/$PROJECT_ENVIRONMENT/
-sed -i "s/image:.*$/image: finology\/tech:k8s-test/g" $SCRIPT_PATH/../projects/python/template/environments/$PROJECT_ENVIRONMENT/docker/docker-compose.yml
+sed -i "s/image:.*$/image: dockerhub\.finology\.com\.my\/example-default:latest/g" $PROJECT_DEPLOY_DIR/environments/$PROJECT_ENVIRONMENT/docker/docker-compose.yml
+sed -i "s/container_name:.*$/container_name: ds_test_py/g" $PROJECT_DEPLOY_DIR/environments/$PROJECT_ENVIRONMENT/docker/docker-compose.yml
 
-cat $SCRIPT_PATH/../projects/python/template/environments/$PROJECT_ENVIRONMENT/docker/docker-compose.yml
+cat $PROJECT_DEPLOY_DIR/environments/$PROJECT_ENVIRONMENT/docker/docker-compose.yml
 
 printf "\nDEPLOYMENT_DIR=$TEST_WORKING_DIR\nDEPLOYMENT_SERVER=localhost\nDEPLOYMENT_SERVER_USER=$USER\nREPO=file://$COPY_PROJECT_DIR/python-project\nSERVICE_NAME=$SERVICE_NAME\nLINKED_FILES=\nLINKED_DIRS=\"\"\n" >> deploy/app-config.sh
-printf "PROJECT_ENVIRONMENT=$PROJECT_ENVIRONMENT\nGIT_BRANCH=master\nPACKAGE=docker\nPUSH=docker\nPOST_PUSH=docker-pull\n" >> deploy/environments/default/config.sh
+printf "PROJECT_ENVIRONMENT=$PROJECT_ENVIRONMENT\nGIT_BRANCH=master\nPACKAGE=docker\nPUSH=docker\nPOST_PUSH=docker-pull\nDOCKER_IMAGE=dockerhub.finology.com.my/example-default:latest\n" >> deploy/environments/default/config.sh
 cat deploy/app-config.sh
 cat deploy/environments/default/config.sh
 #sed -i 's/    image\: django_project\:latest//g' deploy/environments/default/docker/docker-compose.yml
@@ -44,7 +45,7 @@ if [ $(grep -c 'The install worked successfully! Congratulations!' index.html) -
 else
 	error 'fail! :('
 fi
-CONT_ID=$(docker container ls | grep 'k8s-test' | awk '{print $1}')
+CONT_ID=$(docker container ls | grep 'ds_test_py' | awk '{print $1}')
 docker container stop $CONT_ID
 cd $SCRIPT_PATH/../
 rm -rf /tmp/deploy-scripts

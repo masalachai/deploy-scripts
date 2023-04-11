@@ -3,12 +3,8 @@ version: '2'
 services:
   default:
     image: rails_project:latest
+    container_name: rails_project
     restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APP_ENV: default
     volumes:
       - ./../../shared:/shared
     ports:

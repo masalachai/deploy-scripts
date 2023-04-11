@@ -36,6 +36,8 @@ copy_deployment_files() {
 		INSTALL_ENV="$IENV" sh installer/install.sh "$1" "$COPY_PROJECT_DIR/$1-project" --docker
 	elif [ "$3" = "kubernetes" ] || [ "$4" = "kubernetes" ]; then
 		INSTALL_ENV="$IENV" sh installer/install.sh "$1" "$COPY_PROJECT_DIR/$1-project" --docker --kubernetes
+	elif [ "$3" = "helm" ] || [ "$4" = "helm" ]; then
+		INSTALL_ENV="$IENV" sh installer/install.sh "$1" "$COPY_PROJECT_DIR/$1-project" --docker --helm
 	else
 		INSTALL_ENV="$IENV" sh installer/install.sh "$1" "$COPY_PROJECT_DIR/$1-project"
 	fi
